@@ -7,8 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/ZZ8-8ZZ/image/202407240052227.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8784164726551117"
-     crossorigin="anonymous"></script>
+  <title>视频解析</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -40,13 +39,13 @@
       font-size: 2rem;
     }
 
-  .input-group {
+    .input-group {
       display: flex;
       align-items: center;
       margin-bottom: 20px;
     }
 
-  .form-control {
+    .form-control {
       flex: 1;
       padding: 10px;
       font-size: 16px;
@@ -58,12 +57,12 @@
       transition: border-color 0.3s, box-shadow 0.3s;
     }
 
-  .form-control:focus {
+    .form-control:focus {
       border-color: #4b99bd;
       box-shadow: 0 0 8px rgba(76, 155, 175, 0.5);
     }
 
-  .btn-outline-secondary {
+    .btn-outline-secondary {
       padding: 10px 15px;
       font-size: 16px;
       border-radius: 0 5px 5px 0;
@@ -75,12 +74,12 @@
       transition: background-color 0.3s, color 0.3s;
     }
 
-  .btn-outline-secondary:hover {
+    .btn-outline-secondary:hover {
       background-color: #54c5e4;
       color: white;
     }
 
-  .btn-success {
+    .btn-success {
       padding: 10px 20px;
       font-size: 16px;
       border-radius: 5px;
@@ -92,20 +91,16 @@
       margin: 5px;
     }
 
-  .btn-success:hover {
+    .btn-success:hover {
       background-color: #4b99bd;
     }
 
-  .btn-success:disabled {
+    .btn-success:disabled {
       background-color: #cccccc;
       cursor: not-allowed;
     }
 
-  .input-group.fa-times {
-      margin-right: 5px;
-    }
-
-  .footer {
+    .footer {
       text-align: right;
       font-size: 14px;
       color: #fff;
@@ -113,22 +108,48 @@
       max-width: 25rem;
     }
 
-  .footer p {
+    .footer p {
       margin: 5px 0;
     }
 
-  .footer a {
+    .footer a {
       color: #fff;
       text-decoration: none;
       font-weight: bold;
       margin: 0 5px;
     }
 
-  .footer a:hover {
+    .footer a:hover {
       text-decoration: underline;
     }
+
+    /* 微信浏览器提示遮罩层 */
+    #weixin-tip {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      text-align: center;
+      color: white;
+      font-size: 18px;
+      padding: 20px;
+      box-sizing: border-box;
+      background-color: #ffffff;
+    }
+
+    #weixin-tip img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    #weixin-tip p {
+      /* margin-top: 20px; */
+    }
   </style>
-  <title>视频解析</title>
 </head>
 
 <body>
@@ -136,24 +157,32 @@
     <h1>ZACH 视频解析</h1>
     <form onsubmit="return false;">
       <div class="input-group">
-        <input type="text" id="urlInput" class="form-control" placeholder="请输入 URL" oninput="validateInput()">
+        <input type="text" id="urlInput" class="form-control" placeholder="请输入 URL/影视名称" oninput="validateInput()">
         <button class="btn btn-outline-secondary" type="button" onclick="clearInput()">
           <i class="fas fa-times"></i>
         </button>
       </div>
+      <button class="btn btn-success" id="line3Btn" onclick="openLine3()">推荐线路</button>
       <button class="btn btn-success" id="line1Btn" onclick="openLine1()">线路一</button>
       <button class="btn btn-success" id="line2Btn" onclick="openLine2()">线路二</button>
+      <p style="color: red;">使用推荐线路查询直接搜影视名称即可</p>
     </form>
   </div>
+
   <div class="footer">
     <a href="declaration.html" target="_blank">声明</a>
     <p>
-        <a href="https://www.iqiyi.com/" target="_blank">爱奇艺</a>
-        <a href="https://youku.com/" target="_blank">优酷</a>
-        <a href="https://www.mgtv.com/" target="_blank">芒果TV</a>
-        <a href="https://v.qq.com/" target="_blank">腾讯视频</a>
+      <a href="https://www.iqiyi.com/" target="_blank">爱奇艺</a>
+      <a href="https://youku.com/" target="_blank">优酷</a>
+      <a href="https://www.mgtv.com/" target="_blank">芒果TV</a>
+      <a href="https://v.qq.com/" target="_blank">腾讯视频</a>
     </p>
     <p>Copyright 2024 ZACH. All rights reserved.</p>
+  </div>
+
+  <!-- 微信浏览器提示 -->
+  <div id="weixin-tip">
+    <img src="https://cdn.jsdelivr.net/gh/ZZ8-8ZZ/image/202408151358934.jpg" alt="在浏览器中打开">
   </div>
 
   <script>
@@ -166,7 +195,6 @@
       var urlInput = document.getElementById('urlInput').value;
       var line1Btn = document.getElementById('line1Btn');
       var line2Btn = document.getElementById('line2Btn');
-      // 判断输入内容是否为 URL
       var urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
       if (!urlPattern.test(urlInput)) {
         line1Btn.disabled = true;
@@ -197,6 +225,26 @@
       }
       var fullUrl = 'https://im1907.top/?jx=' + urlInput;
       window.open(fullUrl);
+    }
+
+    function openLine3() {
+      var urlInput = document.getElementById('urlInput').value;
+      if (!urlInput) {
+        alert('请输入影视名称');
+        return;
+      }
+      var fullUrl = 'https://www.freeok.vip/so1so/-------------.html?wd=' + encodeURIComponent(urlInput);
+      window.open(fullUrl);
+    }
+
+    // 检测微信内置浏览器
+    function isWeixinBrowser() {
+      var ua = window.navigator.userAgent.toLowerCase();
+      return ua.includes('micromessenger');
+    }
+
+    if (isWeixinBrowser()) {
+      document.getElementById('weixin-tip').style.display = 'block';
     }
   </script>
 </body>
