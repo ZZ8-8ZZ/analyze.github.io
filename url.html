@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/ZZ8-8ZZ/image/202408230929123.ico">
+    <title>视频解析_URL解析模块使用方法</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0077b6, #00b4d8);
+            color: #fff;
+            line-height: 1.6;
+            text-align: center;
+            padding: 20px;
+            padding-bottom: 80px; /* 留出底部空间给 footer */
+        }
+
+        header {
+            padding: 10px;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .intro {
+            margin: 20px auto;
+            max-width: 900px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .feature-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 0;
+            overflow: hidden;
+            text-align: left;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .feature-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            cursor: pointer; /* Change cursor to pointer for clickable image */
+        }
+
+        .feature-content {
+            padding: 20px;
+        }
+
+        .feature-content h2 {
+            color: #ffdd00;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .feature-content p {
+            color: #fff;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        footer {
+            position: fixed; /* 固定位置 */
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin-top: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .feature-content h2 {
+                font-size: 1.8em;
+            }
+
+            .feature-content p {
+                font-size: 1em;
+            }
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Circle button styles */
+        .circle-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #ffdd00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .circle-button:hover {
+            background-color: #ffd700; /* Slightly darker on hover */
+            transform: scale(1.1);
+        }
+
+        .circle-button img {
+            width: 45px; /* ICO 图标的大小 */
+            height: 45px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>URL解析模块使用方法</h1>
+        <p>We want to pursue the future seriously.</p>
+    </header>
+    
+    <section class="intro">
+        <p>请大家记住收藏本站永久导航页网址：<a href="https://TV.ZACH.ASIA/" style="text-decoration: none;color: #ffdd00;">tv.zach.asia</a> 以防迷路。请勿相信视频中任何广告，否则后果自负。</p>
+    </section>
+
+    <section class="features">
+        <div class="feature-item">
+            <img src="https://s3.bmp.ovh/imgs/2024/10/04/1b501aa303d13673.png" alt="Feature 1" class="feature-image" onclick="openModal(this)">
+            <div class="feature-content">
+                <h2>第一步</h2>
+                <p>打开本站，进入页面后点击底部四大视频平台【爱奇艺 优酷 芒果TV 腾讯视频】</p>
+            </div>
+        </div>
+
+        <div class="feature-item">
+            <img src="https://s3.bmp.ovh/imgs/2024/10/04/9bca72b9142d0d9a.png" alt="Feature 2" class="feature-image" onclick="openModal(this)">
+            <div class="feature-content">
+                <h2>第二步</h2>
+                <p>进入平台后（以爱奇艺为例），打开要观看的视频，复制浏览器URL框中的URL地址。</p>
+            </div>
+        </div>
+
+        <div class="feature-item">
+            <img src="https://s3.bmp.ovh/imgs/2024/10/04/c4ea17f30c48ed5d.png" alt="Feature 3" class="feature-image" onclick="openModal(this)">
+            <div class="feature-content">
+                <h2>第三步</h2>
+                <p>回到本站，粘贴复制的URL后点击亮着的按钮即可。</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Copyright 2024 <a href="https://TV.ZACH.ASIA/" style="text-decoration: none;color: #fff;">tv.zach.asia</a>. All rights reserved.</p>
+    </footer>
+
+    <!-- Circle button for declaration -->
+    <div class="circle-button" onclick="window.open('declaration.html', '_blank');">
+        <img src="https://s3.bmp.ovh/imgs/2024/10/05/2225d3702f987017.png" alt="声明图标"> <!-- 替换为你的ICO图标链接 -->
+    </div>
+
+    <!-- Modal for image enlargement -->
+    <div id="myModal" class="modal" onclick="closeModal()">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
+
+    <script>
+        function openModal(img) {
+            const modal = document.getElementById("myModal");
+            const modalImg = document.getElementById("img01");
+            modal.style.display = "block";
+            modalImg.src = img.src;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+    </script>
+</body>
+</html>
