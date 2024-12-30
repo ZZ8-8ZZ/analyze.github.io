@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/ZZ8-8ZZ/image/202408230929123.ico">
+    <title>视频播放</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0077b6, #00b4d8);
+            color: #fff;
+        }
+
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .back-btn:hover {
+            background: #ffdd00;
+            color: #000;
+            transform: scale(1.05);
+        }
+
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+
+        .api-select {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23fff' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+        }
+
+        .api-select:hover {
+            background-color: #ffdd00;
+            color: #000;
+            transform: scale(1.05);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23000' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        }
+
+        .api-select option {
+            background: #333;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="location.href='parse.html'">返回丨本站永久导航地址：ZZ8-8ZZ.GitHub.Io</button>
+    <div class="control-panel">
+        <select class="api-select" id="api-select" onchange="changeApi()">
+            <option value="https://z1.m1907.top/?jx=">默认线路</option>
+            <option value="https://okjx.cc/?url=">线路2</option>
+            <option value="https://jx.xmflv.com/?url=">线路3</option>
+            <option value="https://jsap.attakids.com/?url=">线路4</option>
+            <option value="https://jx.jsonplayer.com/player/?url=">线路5</option>
+        </select>
+    </div>
+    <div class="video-container">
+        <iframe id="jiekou" name="jiekou" allowfullscreen></iframe>
+    </div>
+
+    <script>
+    let originalUrl = '';
+    
+    window.onload = function() {
+        // 获取URL参数中的视频地址
+        var url = new URLSearchParams(window.location.search).get('url');
+        if(url) {
+            url = decodeURIComponent(url);
+            // 提取原始视频URL并保存
+            originalUrl = extractOriginalUrl(url);
+            if(!originalUrl) {
+                originalUrl = url; // 如果无法提取，则使用完整URL
+            }
+            document.getElementById('jiekou').src = url;
+            
+            // 设置当前选中的接口
+            const apiSelect = document.getElementById('api-select');
+            for(let i = 0; i < apiSelect.options.length; i++) {
+                if(url.startsWith(apiSelect.options[i].value)) {
+                    apiSelect.selectedIndex = i;
+                    break;
+                }
+            }
+        } else {
+            location.href = 'parse.html';
+        }
+    }
+    
+    function extractOriginalUrl(url) {
+        // 尝试从各种可能的URL格式中提取原始视频URL
+        const patterns = [
+            /[?&]url=([^&]+)/,  // 标准格式
+            /\?jx=([^&]+)/,     // 部分接口特殊格式
+            /\?v=([^&]+)/       // 其他可能的格式
+        ];
+        
+        for(let pattern of patterns) {
+            const match = url.match(pattern);
+            if(match && match[1]) {
+                return decodeURIComponent(match[1]);
+            }
+        }
+        
+        // 如果都无法匹配，返回原始URL
+        return url;
+    }
+    
+    function changeApi() {
+        if(!originalUrl) return;
+        
+        const api = document.getElementById('api-select').value;
+        // 确保原始URL不包含解析接口前缀
+        let videoUrl = originalUrl;
+        if(videoUrl.includes('?url=')) {
+            videoUrl = extractOriginalUrl(videoUrl);
+        }
+        
+        const newUrl = api + encodeURIComponent(videoUrl);
+        document.getElementById('jiekou').src = newUrl;
+    }
+    </script>
+</body>
+</html>

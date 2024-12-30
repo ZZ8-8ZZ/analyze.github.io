@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/ZZ8-8ZZ/image/202408230929123.ico">
+    <title>ZACH_视频解析</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0077b6, #00b4d8);
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-box {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .search-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-tab.active {
+            background: #ffdd00;
+            color: #000;
+        }
+
+        .search-form {
+            display: none;
+            gap: 15px;
+        }
+
+        .search-form.active {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        select,
+        input,
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+        input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        button {
+            background: #ffdd00;
+            color: #000;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .platform-list {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .platform-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 25px 20px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .platform-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .platform-item img {
+            width: 100px;
+            height: 60px;
+            margin-bottom: 15px;
+            object-fit: contain;
+        }
+
+        .platform-item p {
+            color: #fff;
+            margin: 0;
+            font-size: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @media (max-width: 768px) {
+            .platform-list {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+                padding: 20px;
+            }
+
+            .platform-item {
+                padding: 20px 15px;
+            }
+
+            .platform-item img {
+                width: 60px;
+                height: 40px;
+            }
+
+            .platform-item p {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .platform-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                padding: 15px;
+            }
+
+            .platform-item {
+                padding: 15px 10px;
+            }
+
+            .platform-item img {
+                width: 60px;
+                height: 40px;
+                margin-bottom: 12px;
+            }
+
+            .platform-item p {
+                font-size: 14px;
+            }
+        }
+
+        select {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transition: all 0.3s;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23fff' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+        }
+
+        select:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+        }
+
+        select option {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+        }
+
+        @media (max-width: 768px) {
+            select {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* 添加教学说明区域的样式 */
+        .tutorial-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .tutorial-title {
+            color: #ffdd00;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tutorial-title-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .detail-btn:hover {
+            background: #ffdd00;
+            color: #000;
+            transform: scale(1.05);
+        }
+
+        .tutorial-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .step-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .step-number {
+            background: #ffdd00;
+            color: #000;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h4 {
+            margin-bottom: 5px;
+            color: #ffdd00;
+        }
+
+        .step-content p {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        .site-notice {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notice-icon {
+            font-size: 20px;
+            color: #ffdd00;
+            flex-shrink: 0;
+        }
+
+        .notice-content {
+            flex: 1;
+        }
+
+        .notice-content p {
+            margin: 0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .notice-content a {
+            color: #ffdd00;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .notice-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo-text {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link:hover {
+            background: #ffdd00;
+            color: #000;
+            transform: scale(1.05);
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-right {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        /* 页脚样式 */
+        .footer {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.95em;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .footer-link:hover {
+            color: #ffdd00;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-divider {
+            margin: 20px auto;
+            width: 80%;
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9em;
+        }
+
+        .footer-links span {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                padding: 20px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        /* 微信浏览器提示样式 */
+        #weixin-tip {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            text-align: center;
+            color: #fff;
+        }
+
+        #weixin-tip img {
+            max-width: 100%;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            #weixin-tip img {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="nav-left">
+                <a href="https://ZZ8-8ZZ.github.io/" class="logo">
+                    <img src="./images/logo.png" alt="Logo">
+                    <span class="logo-text">视频解析</span>
+                </a>
+            </div>
+            <div class="nav-right">
+                <a href="sponsor.html" class="nav-link">赞助</a>
+                <a href="tutorial.html" class="nav-link">使用教程</a>
+                <a href="declaration.html" class="nav-link">免责声明</a>
+                <a href="https://ZZ8-8ZZ.github.io/" class="nav-link">永久导航页</a>
+                <!-- <a href="https://github.com/ZZ8-8ZZ" target="_blank" class="nav-link">关于我们</a> -->
+            </div>
+        </nav>
+        <div class="search-box">
+            <div class="search-tabs">
+                <div class="search-tab active" onclick="switchTab('url-search')">视频解析</div>
+                <div class="search-tab" onclick="switchTab('line-search')">三方在线</div>
+                <div class="search-tab" onclick="switchTab('name-search')">影片搜索</div>
+            </div>
+            <div class="search-form active" id="url-search">
+                <select id="api-select">
+                    <option value="https://z1.m1907.top/?jx=">默认线路</option>
+                    <option value="https://jx.nnsvip.cn/?url=">线路2</option>
+                    <option value="https://jx.xmflv.com/?url=">线路3</option>
+                    <option value="https://jsap.attakids.com/?url=">线路4</option>
+                    <option value="https://jx.jsonplayer.com/player/?url=">线路5</option>
+                </select>
+                <input type="text" id="url" placeholder="请粘贴视频链接..." value="">
+                <button onclick="parseVideo()">解析播放</button>
+            </div>
+            <div class="search-form" id="line-search">
+                <select id="online-select">
+                    <option value="https://www.gyf.lol/index.php/vod/search.html?wd=">流光影院</option>
+                    <option value="https://www.jigys.com/vod/search/">极光影视</option>
+                    <option value="https://www.kanjuv.com/search.php?searchword=">星辰影视</option>
+                    <option value="https://www.bczhuiju.com/vodsearch/?wd=">北川影视</option>
+                    <!-- 北川影视发布页https://www.bcyingshi.ink/fb/ -->
+                    <option value="https://www.kanjuw.net/search.php?searchword=">看剧网</option>
+                </select>
+                <input type="text" id="key" placeholder="请输入影片名称..." value="">
+                <button onclick="onlineVideo()">立即搜索</button>
+            </div>
+            <div class="search-form" id="name-search">
+                <input type="text" id="keyword" placeholder="功能开发中..." value="" disabled>
+                <button onclick="searchVideo()" disabled>搜索影片</button>
+            </div>
+        </div>
+
+        <div class="tutorial-box">
+            <div class="tutorial-title">
+                <div class="tutorial-title-left">
+                    <i>📖</i> 视频解析使用教程
+                </div>
+                <button class="detail-btn" onclick="window.location.href='tutorial.html'">
+                    <i>📋</i> 查看详情
+                </button>
+            </div>
+            <div class="tutorial-steps">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>选择视频平台</h4>
+                        <p>点击下方任意视频平台图标进入对应网站</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>复制视频链接</h4>
+                        <p>找到想要观看的视频，复制浏览器地址栏的网址</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>粘贴并解析</h4>
+                        <p>将复制的链接粘贴到上方输入框，点击"解析播放"即可观看</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>切换线路</h4>
+                        <p>如果当前线路无法播放，可以尝试切换其他线路</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="site-notice">
+                <div class="notice-icon">⚡</div>
+                <div class="notice-content">
+                    <p>请大家记住收藏本站永久导航页网址：<a href="https://ZZ8-8ZZ.github.io/" target="_blank">ZZ8-8ZZ.GitHub.Io</a>
+                        以防迷路。请勿相信视频中任何广告，否则后果自负。<br>第三方在线播放中，部分站点需要梯子访问，请自行选择。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="platform-list">
+            <a href="https://www.iqiyi.com/" target="_blank" class="platform-item">
+                <img src="./images/aqylogo.png" alt="爱奇艺">
+                <p>爱奇艺</p>
+            </a>
+            <a href="https://v.qq.com/" target="_blank" class="platform-item">
+                <img src="./images/qqlogo.png" alt="腾讯视频">
+                <p>腾讯视频</p>
+            </a>
+            <a href="https://www.youku.com/" target="_blank" class="platform-item">
+                <img src="./images/youkulogo.png" alt="优酷">
+                <p>优酷视频</p>
+            </a>
+            <a href="https://www.mgtv.com/" target="_blank" class="platform-item">
+                <img src="./images/hunantvlogo.png" alt="芒果TV">
+                <p>芒果TV</p>
+            </a>
+            <a href="https://tv.sohu.com/" target="_blank" class="platform-item">
+                <img src="./images/sohulogo.png" alt="搜狐视频">
+                <p>搜狐视频</p>
+            </a>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="sponsor.html" class="footer-link">赞助</a>
+                    <span>•</span>
+                    <a href="tutorial.html" class="footer-link">使用教程</a>
+                    <span>•</span>
+                    <a href="declaration.html" class="footer-link">免责声明</a>
+                    <!-- <span>•</span> -->
+                    <!-- <a href="https://github.com/ZZ8-8ZZ" target="_blank" class="footer-link">关于我们</a> -->
+                    <span>•</span>
+                    <a href="https://ZZ8-8ZZ.github.io/" class="footer-link">永久导航页</a>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="footer-bottom">
+                <p>© 2024 视频解析. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 微信浏览器提示 -->
+    <div id="weixin-tip">
+        <img src="https://cdn.jsdelivr.net/gh/ZZ8-8ZZ/image/202408151358934.jpg" alt="在浏览器中打开">
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.search-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.search-form').forEach(form => {
+                form.classList.remove('active');
+            });
+
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function searchVideo() {
+            alert("影片搜索功能开发中...");
+            return;
+
+            // 注释掉原有代码
+            /*
+            var keyword = document.getElementById("keyword").value;
+            if(!keyword) {
+                alert("请输入影片名称!");
+                return;
+            }
+            
+            location.href = 'search.html?keyword=' + encodeURIComponent(keyword);
+            */
+        }
+
+        function parseVideo() {
+            var url = document.getElementById("url").value;
+            if (!url) {
+                alert("请输入视频链接!");
+                return;
+            }
+
+            if (url.indexOf("://") == -1) {
+                url = "http://" + url;
+            }
+
+            var api = document.getElementById("api-select").value;
+            var playUrl = api + encodeURIComponent(url);
+
+            // 跳转到播放页面
+            location.href = 'index.html?url=' + encodeURIComponent(playUrl);
+        }
+
+        function onlineVideo() {
+            var key = document.getElementById("key").value;
+            if (!key) {
+                alert("请输入影片名称!");
+                return;
+            }
+
+            var online = document.getElementById("online-select").value;
+            var playUrl = online + encodeURIComponent(key);
+
+            // 在新标签页中打开
+            window.open(playUrl, '_blank');
+        }
+
+        // 检测微信内置浏览器
+        function isWeixinBrowser() {
+            var ua = window.navigator.userAgent.toLowerCase();
+            return ua.includes('micromessenger');
+        }
+
+        // 页面加载完成后检测
+        window.onload = function() {
+            if (isWeixinBrowser()) {
+                document.getElementById('weixin-tip').style.display = 'block';
+                // 阻止页面滚动
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // 点击提示图片时关闭提示
+        document.getElementById('weixin-tip').onclick = function() {
+            this.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+
+</html>
