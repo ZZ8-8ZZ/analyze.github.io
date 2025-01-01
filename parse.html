@@ -513,6 +513,39 @@
                 width: 90%;
             }
         }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #ffdd00;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            color: #fff;
+            margin-top: 15px;
+            font-size: 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 
@@ -547,7 +580,7 @@
                     <option value="https://jsap.attakids.com/?url=">线路4</option>
                     <option value="https://jx.jsonplayer.com/player/?url=">线路5</option>
                 </select>
-                <input type="text" id="url" placeholder="请粘贴视频链接..." value="">
+                <input type="text" id="url" placeholder="请粘贴视频链接(支持爱奇艺、腾讯视频等主流视频网站)" value="">
                 <button onclick="parseVideo()">解析播放</button>
             </div>
             <div class="search-form" id="line-search">
@@ -559,12 +592,12 @@
                     <!-- 北川影视发布页https://www.bcyingshi.ink/fb/ -->
                     <option value="https://www.kanjuw.net/search.php?searchword=">看剧网</option>
                 </select>
-                <input type="text" id="key" placeholder="请输入影片名称..." value="">
+                <input type="text" id="key" placeholder="请输入影片名称（例：流浪地球）" value="">
                 <button onclick="onlineVideo()">立即搜索</button>
             </div>
             <div class="search-form" id="name-search">
                 <input type="text" id="keyword" placeholder="功能开发中..." value="" disabled>
-                <button onclick="searchVideo()" disabled>搜索影片</button>
+                <button onclick="searchVideo()">搜索影片</button>
             </div>
         </div>
 
@@ -666,6 +699,13 @@
         <img src="images/202408151358934.jpg" alt="在浏览器中打开">
     </div>
 
+    <div class="loading-overlay" id="loading-overlay">
+        <div style="text-align: center;">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">加载中...</div>
+        </div>
+    </div>
+
     <script>
         function switchTab(tabId) {
             document.querySelectorAll('.search-tab').forEach(tab => {
@@ -680,7 +720,7 @@
         }
 
         function searchVideo() {
-            alert("影片搜索功能开发中...");
+            alert("影片搜索功能开发中...可使用第三方在线播放功能代替");
             return;
 
             // 注释掉原有代码
@@ -695,22 +735,64 @@
             */
         }
 
+        function showLoading() {
+            document.getElementById('loading-overlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+
         function parseVideo() {
-            var url = document.getElementById("url").value;
+            var url = document.getElementById("url").value.trim();
+            
+            // 验证是否为空
             if (!url) {
                 alert("请输入视频链接!");
                 return;
             }
+            
+            // 验证是否是合法的 URL 格式
+            try {
+                // 如果没有协议头,添加 http://
+                if (url.indexOf("://") == -1) {
+                    url = "http://" + url;
+                }
+                
+                // 尝试创建 URL 对象来验证
+                new URL(url);
+                
+                // 验证是否包含主要视频网站域名
+                const validDomains = [
+                    "iqiyi.com",
+                    "v.qq.com",
+                    "youku.com", 
+                    "mgtv.com",
+                    "tv.sohu.com",
+                    "bilibili.com",
+                    "le.com"
+                ];
+                
+                const urlDomain = new URL(url).hostname;
+                const isValidDomain = validDomains.some(domain => urlDomain.includes(domain));
+                
+                if (!isValidDomain) {
+                    alert("请输入正确的视频网站链接!\n支持爱奇艺、腾讯视频、优酷、芒果TV等主流视频网站");
+                    return;
+                }
+                
+                var api = document.getElementById("api-select").value;
+                var playUrl = api + encodeURIComponent(url);
 
-            if (url.indexOf("://") == -1) {
-                url = "http://" + url;
+                showLoading();
+                setTimeout(() => {
+                    location.href = 'index.html?url=' + encodeURIComponent(playUrl);
+                }, 500);
+                
+            } catch (e) {
+                alert("请输入有效的视频链接!");
+                return;
             }
-
-            var api = document.getElementById("api-select").value;
-            var playUrl = api + encodeURIComponent(url);
-
-            // 跳转到播放页面
-            location.href = 'index.html?url=' + encodeURIComponent(playUrl);
         }
 
         function onlineVideo() {
@@ -723,8 +805,11 @@
             var online = document.getElementById("online-select").value;
             var playUrl = online + encodeURIComponent(key);
 
-            // 在新标签页中打开
-            window.open(playUrl, '_blank');
+            showLoading(); // 显示加载动画
+            setTimeout(() => {
+                window.open(playUrl, '_blank');
+                hideLoading(); // 隐藏加载动画
+            }, 500);
         }
 
         // 检测微信内置浏览器
