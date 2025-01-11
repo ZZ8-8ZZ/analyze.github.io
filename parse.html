@@ -546,6 +546,313 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* 修改历史记录相关样式 */
+        .history-btn {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 99;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .history-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .history-btn::before {
+            content: "📋";
+            font-size: 16px;
+        }
+
+        .history-count {
+            background: #ffdd00;
+            color: #000;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .history-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .history-box {
+            max-width: 1000px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            animation: slideIn 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .history-header h3 {
+            color: #ffdd00;
+            margin: 0;
+            font-size: 1.3em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-header h3::before {
+            content: "📋";
+            font-size: 1.2em;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .history-actions button {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .clear-btn {
+            background: rgba(255, 87, 87, 0.15);
+            color: #ff5757;
+        }
+
+        .clear-btn:hover {
+            background: #ff5757;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .clear-btn::before {
+            content: "🗑️";
+            font-size: 1.1em;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .close-btn::before {
+            content: "✖️";
+            font-size: 1.1em;
+        }
+
+        .history-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .history-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .history-section h4 {
+            color: #fff;
+            margin: 0 0 15px 0;
+            padding-left: 12px;
+            border-left: 3px solid #ffdd00;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .history-section h4::after {
+            content: attr(data-count);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .history-section .history-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .history-title {
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            word-break: break-all;
+            min-height: 40px;
+        }
+
+        .history-time {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .history-time::before {
+            content: "🕒";
+            font-size: 1.1em;
+        }
+
+        .history-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .history-empty::before {
+            content: "📭";
+            display: block;
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .history-box {
+                margin: 20px auto;
+                padding: 20px;
+            }
+            
+            .history-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .history-section {
+                padding: 15px;
+            }
+            
+            .history-btn {
+                right: 15px;
+                bottom: 15px;
+                padding: 10px 20px;
+            }
+            
+            .history-actions {
+                gap: 8px;
+            }
+            
+            .history-actions button {
+                padding: 6px 12px;
+            }
+            
+            .history-section .history-list {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .history-item {
+                padding: 12px;
+            }
+            
+            .history-title {
+                font-size: 13px;
+                min-height: 36px;
+            }
+            
+            .history-time {
+                font-size: 11px;
+            }
+        }
+
+        /* 添加中等屏幕尺寸的适配 */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .history-section .history-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 
@@ -598,6 +905,26 @@
             <div class="search-form" id="name-search">
                 <input type="text" id="keyword" placeholder="功能开发中..." value="" disabled>
                 <button onclick="searchVideo()">搜索影片</button>
+            </div>
+        </div>
+
+        <button id="history-btn" class="history-btn">
+            观看历史
+            <span class="history-count">0</span>
+        </button>
+
+        <div id="history-container" class="history-container">
+            <div class="history-box">
+                <div class="history-header">
+                    <h3>观看历史</h3>
+                    <div class="history-actions">
+                        <button onclick="clearHistory()" class="clear-btn">清空历史</button>
+                        <button onclick="closeHistory()" class="close-btn">关闭</button>
+                    </div>
+                </div>
+                <div id="history-list" class="history-list">
+                    <!-- 历史记录将通过 JavaScript 动态插入 -->
+                </div>
             </div>
         </div>
 
@@ -781,13 +1108,13 @@
                     return;
                 }
                 
+                // 添加到历史记录
+                addToHistory(url);
+                
                 var api = document.getElementById("api-select").value;
                 var playUrl = api + encodeURIComponent(url);
-
-                showLoading();
-                setTimeout(() => {
-                    location.href = 'index.html?url=' + encodeURIComponent(playUrl);
-                }, 500);
+                
+                location.href = 'index.html?url=' + encodeURIComponent(playUrl);
                 
             } catch (e) {
                 alert("请输入有效的视频链接!");
@@ -802,6 +1129,9 @@
                 return;
             }
 
+            // 添加到搜索历史
+            addToSearchHistory(key);
+
             var online = document.getElementById("online-select").value;
             var playUrl = online + encodeURIComponent(key);
 
@@ -810,6 +1140,100 @@
                 window.open(playUrl, '_blank');
                 hideLoading(); // 隐藏加载动画
             }, 500);
+        }
+
+        // 添加搜索历史相关函数
+        function addToSearchHistory(keyword) {
+            let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+            const timestamp = new Date().toLocaleString();
+            
+            // 检查是否已存在相同的关键词
+            const existingIndex = searchHistory.findIndex(item => item.keyword.toLowerCase() === keyword.toLowerCase());
+            
+            if (existingIndex !== -1) {
+                // 如果存在，则更新时间并移到顶部
+                searchHistory.splice(existingIndex, 1);
+            }
+            
+            // 添加新记录到开头
+            searchHistory.unshift({
+                keyword: keyword,
+                time: timestamp
+            });
+            
+            // 最多保存5条记录
+            searchHistory = searchHistory.slice(0, 3);
+            
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            displayHistory();
+        }
+
+        // 修改 displayHistory 函数来显示两种历史记录
+        function displayHistory() {
+            const historyList = document.getElementById('history-list');
+            const videoHistory = JSON.parse(localStorage.getItem('videoHistory') || '[]');
+            const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+            
+            let historyHTML = '';
+            
+            // 添加视频解析历史
+            if (videoHistory.length > 0) {
+                historyHTML += `
+                    <div class="history-section">
+                        <h4 data-count="${videoHistory.length}">视频解析历史</h4>
+                        <div class="history-list">
+                            ${videoHistory.map(item => `
+                                <div class="history-item" onclick="replayVideo('${item.url}')">
+                                    <div class="history-title">${item.title}</div>
+                                    <div class="history-time">${item.time}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+            }
+            
+            // 添加搜索历史
+            if (searchHistory.length > 0) {
+                historyHTML += `
+                    <div class="history-section">
+                        <h4 data-count="${searchHistory.length}">搜索历史</h4>
+                        <div class="history-list">
+                            ${searchHistory.map(item => `
+                                <div class="history-item" onclick="replaySearch('${item.keyword}')">
+                                    <div class="history-title">${item.keyword}</div>
+                                    <div class="history-time">${item.time}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+            }
+            
+            historyList.innerHTML = historyHTML || `
+                <div class="history-empty">
+                    暂无历史记录
+                </div>
+            `;
+            
+            // 更新历史记录数量
+            updateHistoryCount();
+        }
+
+        // 添加重新搜索功能
+        function replaySearch(keyword) {
+            document.getElementById('key').value = keyword;
+            // 切换到搜索标签
+            switchTab('line-search');
+            onlineVideo();
+        }
+
+        // 修改 clearHistory 函数来清空所有历史
+        function clearHistory() {
+            if(confirm('确定要清空所有历史记录吗？')) {
+                localStorage.removeItem('videoHistory');
+                localStorage.removeItem('searchHistory');
+                displayHistory();
+                closeHistory();
+            }
         }
 
         // 检测微信内置浏览器
@@ -832,6 +1256,81 @@
             this.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
+
+        // 添加新的历史记录相关函数
+        function addToHistory(url) {
+            let history = JSON.parse(localStorage.getItem('videoHistory') || '[]');
+            const timestamp = new Date().toLocaleString();
+            
+            // 检查是否已存在相同的 URL
+            const existingIndex = history.findIndex(item => item.url === url);
+            
+            if (existingIndex !== -1) {
+                // 如果存在，则更新时间并移到顶部
+                history.splice(existingIndex, 1);
+            }
+            
+            // 添加新记录到开头
+            history.unshift({
+                url: url,
+                title: url.substring(0, 50) + '...',
+                time: timestamp
+            });
+            
+            // 最多保存5条记录
+            history = history.slice(0, 3);
+            
+            localStorage.setItem('videoHistory', JSON.stringify(history));
+            displayHistory();
+        }
+
+        function replayVideo(url) {
+            document.getElementById('url').value = url;
+            parseVideo();
+        }
+
+        // 页面加载时显示历史记录
+        window.addEventListener('load', function() {
+            displayHistory();
+        });
+
+        // 添加历史记录相关函数
+        function updateHistoryCount() {
+            const videoHistory = JSON.parse(localStorage.getItem('videoHistory') || '[]');
+            const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+            const totalCount = videoHistory.length + searchHistory.length;
+            
+            const countElement = document.querySelector('.history-count');
+            countElement.textContent = totalCount;
+            
+            // 如果没有历史记录，隐藏按钮
+            document.getElementById('history-btn').style.display = totalCount > 0 ? 'flex' : 'none';
+        }
+
+        function showHistory() {
+            document.getElementById('history-container').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeHistory() {
+            document.getElementById('history-container').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // 添加事件监听
+        document.getElementById('history-btn').addEventListener('click', showHistory);
+
+        // 点击空白处关闭历史记录
+        document.getElementById('history-container').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeHistory();
+            }
+        });
+
+        // 页面加载时更新历史记录数量
+        window.addEventListener('load', function() {
+            updateHistoryCount();
+        });
     </script>
 </body>
 
